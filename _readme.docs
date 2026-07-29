@@ -1,11 +1,7 @@
-#[PKG_CORE]
+#.PKG_CORE → Pacote LARAVEL reutilizável para utilizar em outros projetos
     #. Context
-        - Pacote LARAVEL reutilizável para utilizar em outros projetos
     #! Resume Here
-        -
     #. Next Steps
-        -
     #? Draft
-        -
 #
 #
