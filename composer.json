@@ -1,5 +1,5 @@
 {
-    "name": "bsa/pkg-core",
+    "name": "bsa/lib-core",
     "type": "library",
     "description": "Laravel API Core",
     "license": "Proprietary",
