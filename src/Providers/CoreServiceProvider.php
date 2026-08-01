@@ -16,11 +16,11 @@ class CoreServiceProvider extends ServiceProvider
     public function boot(): void
     {
         // Register translations for the package
-        $this->loadTranslationsFrom(__DIR__ . '/../../resources/lang', 'pkg_core');
+        $this->loadTranslationsFrom(__DIR__ . '/../../resources/lang', 'lib_core');
 
         // Opcional: Allow package translations to be published
         $this->publishes([
-            __DIR__ . '/../../resources/lang' => resource_path('lang/vendor/pkg_core'),
-        ], 'pkg_core-lang');
+            __DIR__ . '/../../resources/lang' => resource_path('lang/vendor/lib_core'),
+        ], 'lib_core-lang');
     }
 }

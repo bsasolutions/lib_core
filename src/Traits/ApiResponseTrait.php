@@ -59,8 +59,8 @@ trait ApiResponseTrait
             if (Lang::has($key)) {
                 return __($key, $placeholders);
             }
-            if (Lang::has('pkg_core::' . $key)) {
-                return __('pkg_core::' . $key, $placeholders);
+            if (Lang::has('lib_core::' . $key)) {
+                return __('lib_core::' . $key, $placeholders);
             }
             return $key . $this->formatPlaceholdersFallback($placeholders);
         }
@@ -75,8 +75,8 @@ trait ApiResponseTrait
             if (is_string($key) && Lang::has($key)) {
                 return __($key, $placeholders);
             }
-            if (is_string($key) && Lang::has('pkg_core::' . $key)) {
-                return __('pkg_core::' . $key, $placeholders);
+            if (is_string($key) && Lang::has('lib_core::' . $key)) {
+                return __('lib_core::' . $key, $placeholders);
             }
             return $key ? $key . $this->formatPlaceholdersFallback($placeholders) : json_encode($message, JSON_UNESCAPED_UNICODE);
         }
@@ -88,8 +88,8 @@ trait ApiResponseTrait
             if (Lang::has($key)) {
                 return __($key);
             }
-            if (Lang::has('pkg_core::' . $key)) {
-                return __('pkg_core::' . $key);
+            if (Lang::has('lib_core::' . $key)) {
+                return __('lib_core::' . $key);
             }
         }
 
