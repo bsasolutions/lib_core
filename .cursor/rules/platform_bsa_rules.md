@@ -1,1 +1,0 @@
-D:/projects/bsa/project/_generics/docs/_ai/shared_rules/platform_bsa_rules.md
