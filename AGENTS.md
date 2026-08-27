@@ -2,7 +2,7 @@
 
 The official and current project context is located at:
 
-`../../../../hub_docs/projects/bsa/lib_core/`
+`../../../../hub_docs/.ai/projects_bsa/lib_core/`
 
 Use the `AGENTS.md` file in that directory as the entry point for the project context.
 
