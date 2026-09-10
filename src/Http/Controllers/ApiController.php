@@ -44,13 +44,12 @@ class ApiController extends BaseController
 
     public function storeApi(ApiModel $model, ApiRequest $request, ApiResource $resource, ?callable $prepare = null)
     {
-        $data = $request->validated();
+        $data = $this->requestData($request);
 
         if ($prepare) {
             $data = $prepare($data);
         }
 
-        //$created = $model::create($request->all());
         $created = $model::create($data);
 
         if ($created) {
@@ -74,13 +73,12 @@ class ApiController extends BaseController
     {
         $found = (new $model)->findOrFailApi($id);
 
-        $data = $request->validated();
+        $data = $this->requestData($request);
 
         if ($prepare) {
             $data = $prepare($data);
         }
 
-        //$updated = $found->update($request->all());
         $updated = $found->update($data);
 
         if ($updated) {
@@ -101,5 +99,12 @@ class ApiController extends BaseController
             return $this->successResponse('deleted', 204, [], [$deleted]);
         }
         return $this->errorResponse('not deleted', 400);
+    }
+
+    protected function requestData(ApiRequest $request): array
+    {
+        return empty($request->rules())
+            ? $request->all()
+            : $request->validated();
     }
 }
