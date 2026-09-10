@@ -115,7 +115,7 @@ abstract class ApiCatalogService
     /**
      * Find an effective record by its public catalog ID.
      */
-    public function findByPublicId(int $publicId): array
+    public function findByPublicId(int $publicId): ApiModel
     {
         $public = $this->findCatalogOrFail($publicId);
 
@@ -130,7 +130,7 @@ abstract class ApiCatalogService
     /**
      * Find an effective record by its local ID.
      */
-    public function findByLocalId(int|string $id): array
+    public function findByLocalId(int|string $id): ApiModel
     {
         $local = $this->localQuery()
             ->findOrFail($id);
@@ -314,7 +314,7 @@ abstract class ApiCatalogService
     /**
      * Merge an official catalog record with its local representation.
      */
-    protected function mergeRecord(array $public, ?array $local = null): array
+    protected function mergeRecord(array $public, ?array $local = null): ApiModel
     {
         $result = [
             'id' => $local['id'] ?? null,
@@ -355,17 +355,18 @@ abstract class ApiCatalogService
             }
         }
 
-        return $this->appendEffectiveData(
+        $result = $this->appendEffectiveData(
             $result,
             $public,
             $local
         );
-    }
 
+        return $this->hydrateModel($result);
+    }
     /**
      * Normalize a local-only custom record.
      */
-    protected function localRecord(array $local): array
+    protected function localRecord(array $local): ApiModel
     {
         $result = [
             'id' => $local['id'],
@@ -386,10 +387,12 @@ abstract class ApiCatalogService
                 ->publicIdFromLocalId($localId);
         }
 
-        return $this->appendLocalData(
+        $result = $this->appendLocalData(
             $result,
             $local
         );
+
+        return $this->hydrateModel($result);
     }
 
     /**
@@ -600,5 +603,18 @@ abstract class ApiCatalogService
         array $local
     ): array {
         return $result;
+    }
+
+    /**
+     * Hydrate an effective catalog result as a model instance.
+     */
+    protected function hydrateModel(array $data): ApiModel
+    {
+        $model = $this->newModel();
+
+        return $model->newFromBuilder(
+            $data,
+            $model->getConnectionName()
+        );
     }
 }
