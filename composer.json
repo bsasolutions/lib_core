@@ -5,7 +5,8 @@
     "license": "Proprietary",
     "require": {
         "php": "^8.2",
-        "laravel/framework": "^12.0"
+        "laravel/framework": "^12.0",
+        "spatie/laravel-query-builder": "^6.0"
     },
     "autoload": {
         "psr-4": {

@@ -11,8 +11,8 @@ use Bsa\Core\Http\Resources\ApiResource;
 use Bsa\Core\Models\ApiModel;
 use Bsa\Core\Traits\ApiResponseTrait;
 use Spatie\QueryBuilder\QueryBuilder;
-use Spatie\QueryBuilder\AllowedFilter;
-use Spatie\QueryBuilder\AllowedSort;
+//use Spatie\QueryBuilder\AllowedFilter;
+//use Spatie\QueryBuilder\AllowedSort;
 
 class ApiController extends BaseController
 {
@@ -42,9 +42,17 @@ class ApiController extends BaseController
         return $this->successResponse('no data', 200);
     }
 
-    public function storeApi(ApiModel $model, ApiRequest $request, ApiResource $resource)
+    public function storeApi(ApiModel $model, ApiRequest $request, ApiResource $resource, ?callable $prepare = null)
     {
-        $created = $model::create($request->all());
+        $data = $request->validated();
+
+        if ($prepare) {
+            $data = $prepare($data);
+        }
+
+        //$created = $model::create($request->all());
+        $created = $model::create($data);
+
         if ($created) {
             $created = new $resource($created);
             return $this->successResponse('created', 201, [], $created);
@@ -62,10 +70,19 @@ class ApiController extends BaseController
         return $this->errorResponse('not found', 400);
     }
 
-    public function updateApi(ApiModel $model, ApiRequest $request, ApiResource $resource, string $id): JsonResponse
+    public function updateApi(ApiModel $model, ApiRequest $request, ApiResource $resource, string $id, ?callable $prepare = null): JsonResponse
     {
         $found = (new $model)->findOrFailApi($id);
-        $updated = $found->update($request->all());
+
+        $data = $request->validated();
+
+        if ($prepare) {
+            $data = $prepare($data);
+        }
+
+        //$updated = $found->update($request->all());
+        $updated = $found->update($data);
+
         if ($updated) {
             $updated = new $resource($found);
             return $this->successResponse('updated', 200, [], [$updated]);
@@ -76,7 +93,9 @@ class ApiController extends BaseController
     public function destroyApi(ApiModel $model, ApiResource $resource, string $id): JsonResponse
     {
         $found = (new $model)->findOrFailApi($id);
+
         $deleted = $found->delete();
+
         if ($deleted) {
             $deleted = new $resource($found);
             return $this->successResponse('deleted', 204, [], [$deleted]);
