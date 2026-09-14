@@ -25,7 +25,9 @@ class FilesystemExceptionRenderer
             return response()->json([
                 'success' => false,
                 'message' => 'Internal server error. (filesystem-permission)',
-                'path' => $path
+                'data' => null,
+                'meta' => ['path' => $path],
+                'errors' => []
             ], 500);
         }
 
