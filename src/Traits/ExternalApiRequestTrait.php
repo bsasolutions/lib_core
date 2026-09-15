@@ -3,6 +3,7 @@
 namespace Bsa\Core\Traits;
 
 use Bsa\Core\Exceptions\ApiException;
+use Illuminate\Http\Client\RequestException;
 
 trait ExternalApiRequestTrait
 {
@@ -10,7 +11,7 @@ trait ExternalApiRequestTrait
     {
         try {
             $response = $callback();
-        } catch (\Illuminate\Http\Client\RequestException $e) {
+        } catch (RequestException $e) {
 
             $status = $e->response?->status();
 
@@ -22,7 +23,7 @@ trait ExternalApiRequestTrait
 
                 throw new ApiException(
                     ['external.error', [
-                        'details' => $body['error']['message'] ?? 'external.empty'
+                        'details' => $body['error']['message'] ?? 'external.empty',
                     ]],
                     $status ?? 400
                 );

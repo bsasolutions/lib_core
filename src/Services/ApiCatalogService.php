@@ -65,18 +65,18 @@ abstract class ApiCatalogService
     {
         $catalog = $this->catalogQuery()
             ->get()
-            ->map(fn($record) => (array) $record);
+            ->map(fn ($record) => (array) $record);
 
         $local = $this->localQuery()
             ->get()
-            ->map(fn(ApiModel $record) => $record->toArray());
+            ->map(fn (ApiModel $record) => $record->toArray());
 
         $materialized = $local
-            ->filter(fn(array $record) => !empty($record['public_id']))
+            ->filter(fn (array $record) => ! empty($record['public_id']))
             ->keyBy('public_id');
 
         $custom = $local
-            ->filter(fn(array $record) => empty($record['public_id']));
+            ->filter(fn (array $record) => empty($record['public_id']));
 
         $records = $catalog->map(function (array $public) use ($materialized) {
             $local = $materialized->get($public['id']);
@@ -85,7 +85,7 @@ abstract class ApiCatalogService
         });
 
         $customRecords = $custom->map(
-            fn(array $record) => $this->localRecord($record)
+            fn (array $record) => $this->localRecord($record)
         );
 
         return $records
@@ -135,7 +135,7 @@ abstract class ApiCatalogService
         $local = $this->localQuery()
             ->findOrFail($id);
 
-        if (!$local->public_id) {
+        if (! $local->public_id) {
             return $this->localRecord($local->toArray());
         }
 
@@ -267,7 +267,7 @@ abstract class ApiCatalogService
         $model = $this->localQueryWithTrashed()
             ->find($id);
 
-        if (!$model || !$model->public_id) {
+        if (! $model || ! $model->public_id) {
             return null;
         }
 
@@ -285,7 +285,7 @@ abstract class ApiCatalogService
         foreach ($this->relations() as $relation) {
             $publicField = $relation['public'];
 
-            if (!array_key_exists($publicField, $data)) {
+            if (! array_key_exists($publicField, $data)) {
                 continue;
             }
 
@@ -338,13 +338,13 @@ abstract class ApiCatalogService
 
             if (
                 $local !== null &&
-                !empty($local[$relation['local']])
+                ! empty($local[$relation['local']])
             ) {
                 $result[$relation['public']] =
                     $this->relationService($relation)
-                    ->publicIdFromLocalId(
-                        $local[$relation['local']]
-                    );
+                        ->publicIdFromLocalId(
+                            $local[$relation['local']]
+                        );
             } else {
                 $value = $public[$catalogField] ?? null;
 
@@ -363,6 +363,7 @@ abstract class ApiCatalogService
 
         return $this->hydrateModel($result);
     }
+
     /**
      * Normalize a local-only custom record.
      */
@@ -384,7 +385,7 @@ abstract class ApiCatalogService
 
             $result[$relation['public']] =
                 $this->relationService($relation)
-                ->publicIdFromLocalId($localId);
+                    ->publicIdFromLocalId($localId);
         }
 
         $result = $this->appendLocalData(
@@ -404,7 +405,7 @@ abstract class ApiCatalogService
             ->where('id', $publicId)
             ->first();
 
-        if (!$record) {
+        if (! $record) {
             $exception = new ModelNotFoundException;
 
             $exception->setModel(
@@ -466,7 +467,7 @@ abstract class ApiCatalogService
      */
     protected function catalogTable(): string
     {
-        return $this->catalogSchema . '.' . $this->newModel()->getTable();
+        return $this->catalogSchema.'.'.$this->newModel()->getTable();
     }
 
     /**
@@ -517,7 +518,7 @@ abstract class ApiCatalogService
     {
         $service = app($relation['service']);
 
-        if (!$service instanceof ApiCatalogService) {
+        if (! $service instanceof ApiCatalogService) {
             throw new InvalidArgumentException(
                 sprintf(
                     'Catalog relation service [%s] must extend [%s].',
@@ -535,7 +536,7 @@ abstract class ApiCatalogService
      */
     protected function newModel(): ApiModel
     {
-        if (!isset($this->model)) {
+        if (! isset($this->model)) {
             throw new InvalidArgumentException(
                 'The catalog service must define the $model property.'
             );
@@ -543,7 +544,7 @@ abstract class ApiCatalogService
 
         $model = app($this->model);
 
-        if (!$model instanceof ApiModel) {
+        if (! $model instanceof ApiModel) {
             throw new InvalidArgumentException(
                 sprintf(
                     'Catalog model [%s] must extend [%s].',

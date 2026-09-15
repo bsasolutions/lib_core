@@ -23,6 +23,7 @@ trait ApiResponseTrait
             'meta' => $meta,
             'data' => $data instanceof Arrayable ? $data->toArray() : $data,
         ];
+
         return response()->json($response, $status, [], JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
     }
 
@@ -34,6 +35,7 @@ trait ApiResponseTrait
             'meta' => $meta,
             'errors' => $errors instanceof Arrayable ? $errors->toArray() : $errors,
         ];
+
         return response()->json($response, $status, [], JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
     }
 
@@ -42,12 +44,12 @@ trait ApiResponseTrait
         // Note: core.base.welcome -> core/base.welcome
         // Auto generate key: core.base.welcome
         if ($message === 'auto' || (is_array($message) && $message[0] === 'auto')) {
-            //return json_encode($message) . ' - ' . $key . ' - ' . json_encode($placeholders);
-            $uri    = request()->route()->uri();
+            // return json_encode($message) . ' - ' . $key . ' - ' . json_encode($placeholders);
+            $uri = request()->route()->uri();
             $uri = preg_replace('/\{.*?\}/', '', $uri);
             $uri = trim($uri, '/');
             $method = request()->route()->getActionMethod();
-            $key    = str_replace('/', '.', $uri) . '.' . $method;
+            $key = str_replace('/', '.', $uri).'.'.$method;
             $key = preg_replace('/\./', '/', $key, 1);
 
             $placeholders = is_array($message) ? ($message[1] ?? []) : [];
@@ -59,10 +61,11 @@ trait ApiResponseTrait
             if (Lang::has($key)) {
                 return __($key, $placeholders);
             }
-            if (Lang::has('lib_core::' . $key)) {
-                return __('lib_core::' . $key, $placeholders);
+            if (Lang::has('lib_core::'.$key)) {
+                return __('lib_core::'.$key, $placeholders);
             }
-            return $key . $this->formatPlaceholdersFallback($placeholders);
+
+            return $key.$this->formatPlaceholdersFallback($placeholders);
         }
 
         // Array: ['core.base.welcome', ['name' => 'John']]
@@ -75,21 +78,22 @@ trait ApiResponseTrait
             if (is_string($key) && Lang::has($key)) {
                 return __($key, $placeholders);
             }
-            if (is_string($key) && Lang::has('lib_core::' . $key)) {
-                return __('lib_core::' . $key, $placeholders);
+            if (is_string($key) && Lang::has('lib_core::'.$key)) {
+                return __('lib_core::'.$key, $placeholders);
             }
-            return $key ? $key . $this->formatPlaceholdersFallback($placeholders) : json_encode($message, JSON_UNESCAPED_UNICODE);
+
+            return $key ? $key.$this->formatPlaceholdersFallback($placeholders) : json_encode($message, JSON_UNESCAPED_UNICODE);
         }
 
         // String lang.key: "core.base.welcome"
-        if ((str_contains($message, '.')) && (!str_contains($message, ' ')) && (preg_match('/^[a-z0-9._\/-]+$/i', $message))) {
+        if ((str_contains($message, '.')) && (! str_contains($message, ' ')) && (preg_match('/^[a-z0-9._\/-]+$/i', $message))) {
             $key = preg_replace('/\./', '/', $message, 1);
 
             if (Lang::has($key)) {
                 return __($key);
             }
-            if (Lang::has('lib_core::' . $key)) {
-                return __('lib_core::' . $key);
+            if (Lang::has('lib_core::'.$key)) {
+                return __('lib_core::'.$key);
             }
         }
 
@@ -99,13 +103,15 @@ trait ApiResponseTrait
 
     private function formatPlaceholdersFallback(array $placeholders): string
     {
-        if (empty($placeholders)) return '';
+        if (empty($placeholders)) {
+            return '';
+        }
 
         $parts = [];
         foreach ($placeholders as $k => $v) {
             $parts[] = "$k: $v";
         }
 
-        return ' (' . implode(', ', $parts) . ')';
+        return ' ('.implode(', ', $parts).')';
     }
 }

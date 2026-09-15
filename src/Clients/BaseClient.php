@@ -28,14 +28,13 @@ abstract class BaseClient
             ->retry(
                 3,
                 self::RETRY_TIME_IN_MILLISECONDS,
-                fn($exception) => $exception instanceof ConnectionException
+                fn ($exception) => $exception instanceof ConnectionException
             );
 
         // In a local environment, ignore SSL
         if (in_array(config('app.env'), ['local', 'testing'])) {
             $instance->withoutVerifying();
         }
-
 
         return $instance;
     }

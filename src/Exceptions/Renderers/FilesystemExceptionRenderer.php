@@ -2,8 +2,8 @@
 
 namespace Bsa\Core\Exceptions\Renderers;
 
-use Throwable;
 use Illuminate\Http\Request;
+use Throwable;
 
 class FilesystemExceptionRenderer
 {
@@ -17,7 +17,7 @@ class FilesystemExceptionRenderer
         ) {
             $path = null;
 
-            //if (preg_match('/"([^"]+\.log)"/', $e->getMessage(), $m)) {
+            // if (preg_match('/"([^"]+\.log)"/', $e->getMessage(), $m)) {
             if (preg_match('/"([^"]+)"/', $e->getMessage(), $m)) {
                 $path = $m[1];
             }
@@ -27,7 +27,7 @@ class FilesystemExceptionRenderer
                 'message' => 'Internal server error. (filesystem-permission)',
                 'data' => null,
                 'meta' => ['path' => $path],
-                'errors' => []
+                'errors' => [],
             ], 500);
         }
 

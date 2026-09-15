@@ -2,9 +2,8 @@
 
 namespace Bsa\Core\Exceptions\Renderers;
 
-use Illuminate\Validation\ValidationException;
 use Bsa\Core\Traits\ApiResponseTrait;
-use Throwable;
+use Illuminate\Validation\ValidationException;
 
 class ValidationExceptionRenderer
 {
@@ -19,7 +18,7 @@ class ValidationExceptionRenderer
         $firstMessage = $errors[$firstField][0] ?? '';
 
         return $this->errorResponse(
-            ['core.' . $firstMessage, ['field' => $firstField, 'all_fields' => $all_fields]],
+            ['core.'.$firstMessage, ['field' => $firstField, 'all_fields' => $all_fields]],
             $e->status,
             ['exception' => class_basename($e)] ?? [],
             $errors
