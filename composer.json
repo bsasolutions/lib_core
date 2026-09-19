@@ -1,0 +1,28 @@
+{
+    "name": "bsa/lib-core",
+    "type": "library",
+    "description": "Laravel API Core",
+    "license": "Proprietary",
+    "require": {
+        "php": "^8.2",
+        "laravel/framework": "^12.0",
+        "spatie/laravel-query-builder": "^6.0"
+    },
+    "require-dev": {
+        "laravel/pint": "^1.24"
+    },
+    "autoload": {
+        "psr-4": {
+            "Bsa\\Core\\": "src/"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Bsa\\Core\\Providers\\CoreServiceProvider"
+            ]
+        }
+    },
+    "minimum-stability": "stable",
+    "prefer-stable": true
+}
