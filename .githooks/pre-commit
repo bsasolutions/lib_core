@@ -1,8 +1,22 @@
 #!/bin/sh
-
 set -e
 
 echo "Running Laravel Pint..."
 ./vendor/bin/pint --dirty
 
+echo "Updating version..."
+NAME=$(php -r 'echo json_decode(file_get_contents("composer.json"))->name ?? "0.0.0";')
+VERSION=$(php -r 'echo json_decode(file_get_contents("composer.json"))->version ?? "0.0.0";')
+BRANCH=$(git branch --show-current)
+BUILD=$(date -u +"%Y-%m-%dT%H:%M:%SZ")
+cat > version.json <<EOF
+{
+    "name": "$NAME",
+    "version": "$VERSION",
+    "branch": "$BRANCH",
+    "build": "$BUILD"
+}
+EOF
+
 git add -u
+git add version.json

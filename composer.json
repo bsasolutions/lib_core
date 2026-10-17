@@ -1,5 +1,6 @@
 {
     "name": "bsa/lib-core",
+    "version": "1.0.0",
     "type": "library",
     "description": "Laravel API Core",
     "license": "Proprietary",
