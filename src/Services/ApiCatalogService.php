@@ -434,9 +434,7 @@ abstract class ApiCatalogService
      */
     protected function catalogQuery(): Builder
     {
-        $model = $this->newModel();
-
-        return DB::connection($model->getConnectionName())
+        return DB::connection('db_client')
             ->table($this->catalogTable());
     }
 
