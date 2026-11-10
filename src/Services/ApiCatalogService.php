@@ -247,6 +247,7 @@ abstract class ApiCatalogService
 
         $data = array_merge(
             $data,
+            array_intersect_key($catalog, array_flip($this->fields())),
             $this->materializeData($catalog)
         );
 
